@@ -30,7 +30,7 @@ import java.util.Map;
  * Created by matthias on 08.03.15.
  */
 public class WebConnectionTask extends AsyncTask<HashMap<String, String>, Void, String> {
-    private static final String LOG_TAG = "RetrieveStationsTask";
+    private static final String LOG_TAG = "WebConnectionTask";
             private OnWebConnectionTaskCompletedListener listener;
             private String url;
 
