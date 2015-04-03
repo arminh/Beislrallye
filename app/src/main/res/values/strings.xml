@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">BeislRallye</string>
 
+    <string name="description_location_type">Welche Beisln willst du besuchen? </string>
+    <string name="description_location_count">Wie viele Beisl sollen wir für dich finden?</string>
+    <string name="description_start_point">Wo ist der Ausgangspunkt der Rallye? </string>
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 </resources>
