@@ -10,5 +10,8 @@
     <color name="colorOverlay">#BBa1b2b3</color>
     <color name="colorSecondaryDark">#585c60</color>
     <color name="colorSecondaryLight">#85898a</color>
+    <color name="blackSemiTransparent">#CC000000</color>
+    <color name="colorWhite">#fafafa</color>
+    <color name="colorWhitePressed">#f1f1f1</color>
 
 </resources>

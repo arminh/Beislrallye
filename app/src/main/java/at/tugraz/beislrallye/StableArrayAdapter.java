@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -75,6 +76,11 @@ public class StableArrayAdapter extends ArrayAdapter<Place> {
         v.findViewById(R.id.visited_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(getContext(), ConsumptionActivity.class);
+                LinearLayout parentLayout = (LinearLayout)v.getParent().getParent();
+                TextView tv = (TextView)parentLayout.findViewById(R.id.item_name);
+                i.putExtra("PLACE_NAME", tv.getText());
+                getContext().startActivity(i);
             }
         });
         if(place.getType() == PlaceType.LOCATION)
