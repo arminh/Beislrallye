@@ -20,6 +20,7 @@ public class MapHandler {
     private GoogleMap map;
     private ArrayList<Polyline> lines;
     private ArrayList<Marker> markers;
+    private Marker currentLocation;
 
     public MapHandler(GoogleMap map) {
         this.map = map;
@@ -62,6 +63,19 @@ public class MapHandler {
     public void removeAllMarkers() {
         for(Marker marker : markers) {
             marker.remove();
+        }
+    }
+
+    public void addCurrentLocationMarker(MarkerOptions markerCurrent) {
+        currentLocation = map.addMarker(markerCurrent);
+        markers.add(currentLocation);
+    }
+
+    public void updateCurrentLocationMarker(LatLng currentPosition) {
+        if(currentLocation != null) {
+            markers.remove(currentLocation);
+            currentLocation.setPosition(currentPosition);
+            markers.add(currentLocation);
         }
     }
 }

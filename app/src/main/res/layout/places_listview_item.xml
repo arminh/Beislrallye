@@ -2,11 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="50dp"
+    android:minHeight="60dp"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
-    android:weightSum="4"
+    android:weightSum="4.1"
     android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1">
+
+        <CheckBox android:id="@+id/checkbox_done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/route_data"
@@ -25,7 +38,8 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center_horizontal"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:textColor="@color/colorSecondaryDark"/>
+            android:textColor="@color/colorSecondaryDark"
+            android:text="asd"/>
 
         <TextView
             android:id="@+id/distance"
@@ -82,6 +96,6 @@
             android:scaleType="fitXY"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:src="@drawable/icon_place_unvisited"/>
+            android:src="@drawable/icon_place_visited"/>
     </RelativeLayout>
 </LinearLayout>

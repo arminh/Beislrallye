@@ -17,6 +17,7 @@
 package at.tugraz.beislrallye;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,15 +75,6 @@ public class StableArrayAdapter extends ArrayAdapter<Place> {
         v.findViewById(R.id.visited_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((ImageView)v).setImageDrawable(getContext().getResources().getDrawable(R.drawable.icon_place_visited));
-            }
-        });
-
-        v.findViewById(R.id.visited_image).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ((ImageView)v).setImageDrawable(getContext().getResources().getDrawable(R.drawable.icon_place_unvisited));
-                return true;
             }
         });
         if(place.getType() == PlaceType.LOCATION)
