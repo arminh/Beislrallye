@@ -4,6 +4,7 @@
     <color name="colorPrimaryMedium">#2a5d96</color>
     <color name="colorPrimaryDark">#1c5493</color>
     <color name="colorPrimaryComplementary">#e8bc0c</color>
+    <color name="colorPrimaryComplementaryDark">#CFAA15</color>
     <color name="colorBackgroundLight">#f7f9f9</color>
     <color name="colorBackgroundLightTransparent">#CCf7f9f9</color>
     <color name="colorBackgroundDark">#a1b2b3</color>
