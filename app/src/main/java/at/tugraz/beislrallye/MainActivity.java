@@ -1,6 +1,18 @@
 package at.tugraz.beislrallye;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.AsyncTask;
+import android.provider.Settings;
+import android.provider.Settings.Secure;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,11 +30,16 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.Calendar;
+import java.util.Vector;
 
 
 public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClient;
+    private LatLng currentPos = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,38 +59,172 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         button.setOnClickListener(
                 new Button.OnClickListener() {
                     public void onClick(View v) {
-                        PendingResult<PlaceLikelihoodBuffer> result = Places.PlaceDetectionApi
-                                .getCurrentPlace(mGoogleApiClient, null);
-                        result.setResultCallback(new ResultCallback<PlaceLikelihoodBuffer>() {
-                            @Override
-                            public void onResult(PlaceLikelihoodBuffer likelyPlaces) {
-                                Place place = likelyPlaces.get(0).getPlace();
-                                getPlaceDetails(place);
-                                for (PlaceLikelihood placeLikelihood : likelyPlaces) {
-                                    Log.i("Likelihood", String.format("Place '%s' has likelihood: %g",
-                                            placeLikelihood.getPlace().getName(),
-                                            placeLikelihood.getLikelihood()));
 
-
-                                }
-                                //likelyPlaces.release();
-                            }
-                        });
                     }
                 }
         );
+
+        LocationManager locationManager = (LocationManager)getSystemService((Context.LOCATION_SERVICE));
+        LocationListener listener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                currentPos = new LatLng(location.getLatitude(), location.getLongitude());
+                Log.i("currentPos", currentPos.toString());
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, listener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000L, 500.0f, listener);
+
     }
 
-    private void getPlaceDetails(Place place) {
+    private void checkEnableGPS() {
+        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Log.i("GPS_Provider", Boolean.toString(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)));
+        Log.i("NETWORK_PROVIDER", Boolean.toString(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)));
+        if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Location Services Not Active");
+            builder.setMessage("Please enable Location Services and GPS");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // Show location settings when the user acknowledges the alert dialog
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            Dialog alertDialog = builder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.show();
+            }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        checkEnableGPS();
+
 
         mGoogleApiClient.connect();
+        prepareRallye();
+
+
     }
+
+    private class LocationControl extends AsyncTask<Context, Void, Void>
+    {
+
+        private final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+
+        protected void onPreExecute()
+        {
+            this.dialog.setMessage("Determining your location...");
+            this.dialog.show();
+        }
+
+        protected Void doInBackground(Context... params)
+        {
+            Long t = Calendar.getInstance().getTimeInMillis();
+            while (currentPos == null && Calendar.getInstance().getTimeInMillis() -t < 30000) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            };
+
+
+
+            return null;
+        }
+
+        protected void onPostExecute(final Void unused)
+        {
+            if(this.dialog.isShowing())
+            {
+                this.dialog.dismiss();
+            }
+
+            getNearestPlaces(currentPos); //does the stuff that requires current location
+        }
+
+    }
+
+
+    private void prepareRallye() {
+
+        //getStartingPoint
+        LatLng startingPoint = null;
+
+
+        if(startingPoint == null) {
+            if(currentPos == null) {
+                LocationControl loc = new LocationControl();
+                loc.execute();
+            }
+            else {
+                getNearestPlaces(currentPos);
+            }
+
+        } else {
+            getNearestPlaces(startingPoint);
+        }
+    }
+
+    private Vector<Place> getNearestPlaces(LatLng startingPoint) {
+        //getTypes
+        Vector<String> types = new Vector<String>();
+        types.add("bar");
+
+        //getnumPlaces
+        int numPlaces = 5;
+
+        return null;
+    }
+
+    private void getPlaceDetails(Place place) {
+        Intent intent = new Intent(this, PlacesPreviewActivity.class);
+
+       // intent.putExtra("place", place);
+        startActivity(intent);
+    }
+
+    public String makeURL (double sourcelat, double sourcelog, double destlat, double destlog ){
+        StringBuilder urlString = new StringBuilder();
+        urlString.append("http://maps.googleapis.com/maps/api/directions/json");
+        urlString.append("?origin=");// from
+        urlString.append(Double.toString(sourcelat));
+        urlString.append(",");
+        urlString
+                .append(Double.toString( sourcelog));
+        urlString.append("&destination=");// to
+        urlString
+                .append(Double.toString( destlat));
+        urlString.append(",");
+        urlString.append(Double.toString( destlog));
+        urlString.append("&sensor=false&mode=driving&alternatives=true");
+        return urlString.toString();
+    }
+
+
 
     @Override
     protected void onStop() {
