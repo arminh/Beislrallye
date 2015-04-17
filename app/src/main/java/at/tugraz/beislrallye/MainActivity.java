@@ -33,6 +33,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.Vector;
 
 
@@ -40,6 +41,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     private GoogleApiClient mGoogleApiClient;
     private LatLng currentPos = null;
+
+    public static final String API_KEY = "AIzaSyCgW9vZAP_Xc-5gdRMxHfv-vnuECmNccpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +98,6 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     private void checkEnableGPS() {
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Log.i("GPS_Provider", Boolean.toString(lm.isProviderEnabled(LocationManager.GPS_PROVIDER)));
-        Log.i("NETWORK_PROVIDER", Boolean.toString(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)));
         if(!lm.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
                 !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
@@ -150,9 +151,6 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 }
 
             };
-
-
-
             return null;
         }
 
@@ -163,7 +161,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 this.dialog.dismiss();
             }
 
-            getNearestPlaces(currentPos); //does the stuff that requires current location
+            getNearestPlaces(currentPos);
         }
 
     }
@@ -197,6 +195,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         //getnumPlaces
         int numPlaces = 5;
 
+        makeURL(startingPoint, types);
+
         return null;
     }
 
@@ -207,20 +207,28 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         startActivity(intent);
     }
 
-    public String makeURL (double sourcelat, double sourcelog, double destlat, double destlog ){
+    public String makeURL (LatLng location, Vector<String> types){
         StringBuilder urlString = new StringBuilder();
-        urlString.append("http://maps.googleapis.com/maps/api/directions/json");
-        urlString.append("?origin=");// from
-        urlString.append(Double.toString(sourcelat));
+        urlString.append("https://maps.googleapis.com/maps/api/place/nearbysearch/json\n");
+        urlString.append("?location=");
+        urlString.append(Double.toString(location.latitude));
         urlString.append(",");
-        urlString
-                .append(Double.toString( sourcelog));
-        urlString.append("&destination=");// to
-        urlString
-                .append(Double.toString( destlat));
-        urlString.append(",");
-        urlString.append(Double.toString( destlog));
-        urlString.append("&sensor=false&mode=driving&alternatives=true");
+        urlString.append(Double.toString( location.longitude));
+        urlString.append("&radius=");
+        urlString.append(Double.toString(1000));
+        urlString.append("&types=");
+
+        final Iterator itr = types.iterator();
+        while(itr.hasNext()) {
+            urlString.append(itr.next());
+            if(itr.hasNext()) {
+                urlString.append('|');
+            }
+        }
+        urlString.append("&key=");
+        urlString.append(API_KEY);
+        Log.i("URL", urlString.toString());
+
         return urlString.toString();
     }
 
