@@ -37,12 +37,15 @@ import java.util.Iterator;
 import java.util.Vector;
 
 
-public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnWebConnectionTaskCompletedListener {
+
+    private static final String LOG_TAG = "MainActivity";
 
     private GoogleApiClient mGoogleApiClient;
     private LatLng currentPos = null;
 
-    public static final String API_KEY = "AIzaSyCgW9vZAP_Xc-5gdRMxHfv-vnuECmNccpg";
+    //public static final String API_KEY = "AIzaSyCgW9vZAP_Xc-5gdRMxHfv-vnuECmNccpg";
+    public static final String API_KEY = "AIzaSyAwfBb-lKApx1P9xZ29Ttq3EEUr8oKkaUI";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,20 +190,47 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         }
     }
 
-    private Vector<Place> getNearestPlaces(LatLng startingPoint) {
+    private void getNearestPlaces(LatLng startingPoint) {
         //getTypes
         Vector<String> types = new Vector<String>();
         types.add("bar");
-        types.add("night_club");
+       // types.add("night_club");
 
         //getnumPlaces
         int numPlaces = 5;
 
         String url = makeURL(startingPoint, types);
-        WebConne
-        Log.i("Url", url);
+        WebConnectionTask connect = new WebConnectionTask(url, this);
+        connect.execute();
+    }
 
-        return null;
+    @Override
+    public <T> void onTaskCompleted(String result) {
+        Log.i(LOG_TAG, "" + result);
+        /*try {
+            //Tranform the string into a json object
+            final JSONObject json = new JSONObject(result);
+            JSONArray routeArray = json.getJSONArray("routes");
+            JSONObject routes = routeArray.getJSONObject(0);
+            JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
+            String encodedString = overviewPolylines.getString("points");
+            List<LatLng> list = decodePoly(encodedString);
+
+
+            Log.d("MapsActivity", "onTaskCompleted");
+            for(int z = 0; z<list.size()-1;z++){
+                LatLng src= list.get(z);
+                LatLng dest= list.get(z+1);
+                Polyline line = map.addPolyline(new PolylineOptions()
+                        .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude,   dest.longitude))
+                        .width(2)
+                        .color(Color.BLUE).geodesic(true));
+            }
+
+        }
+        catch (JSONException e) {
+            Log.e("MapsActivity", "Error in onTaskCompleted" + e.toString());
+        }*/
     }
 
     private void getPlaceDetails(Place place) {
@@ -212,7 +242,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     public String makeURL (LatLng location, Vector<String> types){
         StringBuilder urlString = new StringBuilder();
-        urlString.append("https://maps.googleapis.com/maps/api/place/nearbysearch/json\n");
+        urlString.append("https://maps.googleapis.com/maps/api/place/nearbysearch/json");
         urlString.append("?location=");
         urlString.append(Double.toString(location.latitude));
         urlString.append(",");
@@ -230,7 +260,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         }
         urlString.append("&key=");
         urlString.append(API_KEY);
-        Log.i("URL", urlString.toString());
+        Log.i(LOG_TAG, urlString.toString());
 
         return urlString.toString();
     }
@@ -268,7 +298,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.i("Connection", "Connected");
+        Log.i(LOG_TAG, "Connected");
     }
 
     @Override
@@ -279,7 +309,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         // Called whenever the API client fails to connect.
-        Log.i("Error", "GoogleApiClient connection failed: " + result.toString());
+        Log.i(LOG_TAG, "GoogleApiClient connection failed: " + result.toString());
         if (!result.hasResolution()) {
             // show the localized error dialog.
             GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this, 0).show();
@@ -292,7 +322,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         try {
             result.startResolutionForResult(this, 3);
         } catch (IntentSender.SendIntentException e) {
-            Log.e("Resolution", "Exception while starting resolution activity", e);
+            Log.e(LOG_TAG, "Exception while starting resolution activity", e);
         }
     }
 }
