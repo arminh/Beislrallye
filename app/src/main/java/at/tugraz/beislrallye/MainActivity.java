@@ -191,11 +191,14 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         //getTypes
         Vector<String> types = new Vector<String>();
         types.add("bar");
+        types.add("night_club");
 
         //getnumPlaces
         int numPlaces = 5;
 
-        makeURL(startingPoint, types);
+        String url = makeURL(startingPoint, types);
+        WebConne
+        Log.i("Url", url);
 
         return null;
     }
@@ -215,7 +218,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         urlString.append(",");
         urlString.append(Double.toString( location.longitude));
         urlString.append("&radius=");
-        urlString.append(Double.toString(1000));
+        urlString.append("1000");
         urlString.append("&types=");
 
         final Iterator itr = types.iterator();
