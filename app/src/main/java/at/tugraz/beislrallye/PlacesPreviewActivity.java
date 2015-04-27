@@ -1,17 +1,108 @@
 package at.tugraz.beislrallye;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.android.gms.maps.model.LatLng;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Vector;
 
 
-public class PlacesPreviewActivity extends ActionBarActivity {
+public class PlacesPreviewActivity extends ActionBarActivity implements OnDownloadImageCompletedListener {
+
+    private static final String LOG_TAG = "PlacesPreviewActivity";
+    public static final String API_KEY = "AIzaSyDOxZCpw4hqUFUNeEgpBBz_THnTJf1IveE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_preview);
+
+        Bundle extras = getIntent().getExtras();
+
+        String placeStr;
+        if(extras == null) {
+            placeStr= null;
+        } else {
+            placeStr= extras.getString("place");
+            try {
+                JSONObject jPlace = new JSONObject(placeStr);
+                parsePlace(jPlace);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+    protected void parsePlace(JSONObject place) {
+
+        TextView title = (TextView)findViewById(R.id.placeName);
+
+        try {
+            String name = place.getString("name");
+            title.setText(name);
+
+            JSONArray photos = place.getJSONArray("photos");
+            JSONObject photo = photos.getJSONObject(0);
+            loadPhoto(photo);
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void loadPhoto(JSONObject photo) {
+        try {
+            String ref = photo.getString("photo_reference");
+            int width = 300;
+            int height = 200;
+            String url = makeURL(ref, width, height);
+
+            DownloadImageTask connect = new DownloadImageTask(url, this);
+            connect.execute();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public <T> void onTaskCompleted(Bitmap result) {
+        ImageView pic = (ImageView)findViewById(R.id.placePic);
+        pic.setImageBitmap(result);
+    }
+
+    public String makeURL (String ref, int width, int height) {
+        StringBuilder urlString = new StringBuilder();
+        urlString.append("https://maps.googleapis.com/maps/api/place/photo?");
+        urlString.append("photoreference=");
+        urlString.append(ref);
+        urlString.append("&maxwidth=");
+        urlString.append(Integer.toString(width));
+        urlString.append("&key=");
+        urlString.append(API_KEY);
+        Log.i(LOG_TAG, urlString.toString());
+
+        return urlString.toString();
     }
 
 
@@ -36,4 +127,6 @@ public class PlacesPreviewActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

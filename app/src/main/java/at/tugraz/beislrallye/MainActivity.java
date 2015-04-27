@@ -24,16 +24,20 @@ import android.widget.Button;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Document;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 
@@ -44,8 +48,10 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     private GoogleApiClient mGoogleApiClient;
     private LatLng currentPos = null;
 
+    private int numPlaces;
+
     //public static final String API_KEY = "AIzaSyCgW9vZAP_Xc-5gdRMxHfv-vnuECmNccpg";
-    public static final String API_KEY = "AIzaSyAwfBb-lKApx1P9xZ29Ttq3EEUr8oKkaUI";
+    public static final String API_KEY = "AIzaSyDOxZCpw4hqUFUNeEgpBBz_THnTJf1IveE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +203,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
        // types.add("night_club");
 
         //getnumPlaces
-        int numPlaces = 5;
+        numPlaces = 5;
 
         String url = makeURL(startingPoint, types);
         WebConnectionTask connect = new WebConnectionTask(url, this);
@@ -206,34 +212,23 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     @Override
     public <T> void onTaskCompleted(String result) {
-        Log.i(LOG_TAG, "" + result);
-        /*try {
+        try {
             //Tranform the string into a json object
             final JSONObject json = new JSONObject(result);
-            JSONArray routeArray = json.getJSONArray("routes");
-            JSONObject routes = routeArray.getJSONObject(0);
-            JSONObject overviewPolylines = routes.getJSONObject("overview_polyline");
-            String encodedString = overviewPolylines.getString("points");
-            List<LatLng> list = decodePoly(encodedString);
-
-
-            Log.d("MapsActivity", "onTaskCompleted");
-            for(int z = 0; z<list.size()-1;z++){
-                LatLng src= list.get(z);
-                LatLng dest= list.get(z+1);
-                Polyline line = map.addPolyline(new PolylineOptions()
-                        .add(new LatLng(src.latitude, src.longitude), new LatLng(dest.latitude,   dest.longitude))
-                        .width(2)
-                        .color(Color.BLUE).geodesic(true));
-            }
+            JSONArray results = json.getJSONArray("results");
+            Intent intent = new Intent(this, PlacesPreviewActivity.class);
+            intent.putExtra("place", results.getString(0));
+            startActivity(intent);
 
         }
         catch (JSONException e) {
             Log.e("MapsActivity", "Error in onTaskCompleted" + e.toString());
-        }*/
+        }
+
+
     }
 
-    private void getPlaceDetails(Place place) {
+    private void showPlaceDetails(Place place) {
         Intent intent = new Intent(this, PlacesPreviewActivity.class);
 
        // intent.putExtra("place", place);
@@ -258,6 +253,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 urlString.append('|');
             }
         }
+
+       // urlString.append("&rankby=distance");
         urlString.append("&key=");
         urlString.append(API_KEY);
         Log.i(LOG_TAG, urlString.toString());
