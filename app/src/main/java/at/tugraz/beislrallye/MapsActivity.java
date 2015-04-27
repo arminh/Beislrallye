@@ -69,7 +69,8 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
         map = fm.getMap();
         mapHandler = new MapHandler(map);
 
-        places = DummyPlacesGenerator.generatePlaces();
+        String placesString = getIntent().getExtras().getString("places");
+        places = PlacesGenerator.generatePlaces(placesString);
 
         mapHandler.zoomTo(15);
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {

@@ -242,7 +242,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     private void getNearestPlaces(LatLng startingPoint) {
-
+        if(startPointAddress == null)
+            startPointAddress = new LatLng(47.0693154, 15.4422045);
         String url = makeURL(startPointAddress, selectedTypes);
         WebConnectionTask connect = new WebConnectionTask(url, this);
         connect.execute();
@@ -256,12 +257,12 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             //Tranform the string into a json object
             final JSONObject json = new JSONObject(result);
             JSONArray results = json.getJSONArray("results");
+            if(results.length() >= numOfLocations) {
+                for (int i = 0; i < numOfLocations; i++) {
+                    places.put(results.getJSONObject(i));
 
-            for(int i=0; i < 5; i++) {
-                places.put(results.getJSONObject(i));
-
+                }
             }
-
             String placesString = places.toString();
 
             Intent intent = new Intent(this, MapsActivity.class);
