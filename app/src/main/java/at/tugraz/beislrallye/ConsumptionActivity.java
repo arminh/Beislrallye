@@ -26,7 +26,6 @@ public class ConsumptionActivity extends ActionBarActivity {
         setContentView(R.layout.activity_consumption);
         Intent i = getIntent();
         place = i.getExtras().getString("PLACE_NAME");
-        ((TextView)findViewById(R.id.test)).setText(place);
         consumptionList = (ListView) findViewById(R.id.consumption_lv);
         updateListView();
     }

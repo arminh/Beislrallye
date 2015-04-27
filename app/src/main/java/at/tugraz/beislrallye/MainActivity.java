@@ -20,6 +20,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.util.SparseBooleanArray;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -44,7 +52,9 @@ import java.util.Vector;
 public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnWebConnectionTaskCompletedListener {
 
     private static final String LOG_TAG = "MainActivity";
-
+    private ListView locationTypeLV;
+    private EditText locationCount;
+    private EditText startPoint;
     private GoogleApiClient mGoogleApiClient;
     private LatLng currentPos = null;
 
@@ -52,6 +62,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     //public static final String API_KEY = "AIzaSyCgW9vZAP_Xc-5gdRMxHfv-vnuECmNccpg";
     public static final String API_KEY = "AIzaSyDOxZCpw4hqUFUNeEgpBBz_THnTJf1IveE";
+    private List<String> types;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +76,6 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
 
         LocationManager locationManager = (LocationManager)getSystemService((Context.LOCATION_SERVICE));
         LocationListener listener = new LocationListener() {
@@ -94,6 +104,51 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, listener);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000L, 500.0f, listener);
 
+        startPoint = (EditText) findViewById(R.id.start_point);
+        locationCount = (EditText) findViewById(R.id.location_count);
+        locationTypeLV = (ListView) findViewById(R.id.location_type_lv);
+
+        ArrayAdapter<String> adapter;
+
+        types = new ArrayList<>();
+        types.add("Bar");
+        types.add("Cafe");
+        types.add("Nightclub");
+        types.add("Restraurant");
+
+        adapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_list_item_multiple_choice,
+                types);
+        locationTypeLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        locationTypeLV.setAdapter(adapter);
+
+        findViewById(R.id.compute_ralley_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleOnComputeClick();
+            }
+        });
+    }
+
+    private void handleOnComputeClick() {
+        if(startPoint.getText().toString() == "" || locationCount.getText().toString() == "") {
+            Toast.makeText(this, "Ausgangspunkt und Anzahl müssen ausgefüllt sein", Toast.LENGTH_SHORT).show();
+        } else {
+            String startPointAddress = startPoint.getText().toString();
+            int numOfLocations = Integer.parseInt(locationCount.getText().toString());
+            ArrayList<String> selectedTypes = new ArrayList<>();
+
+            SparseBooleanArray checked = locationTypeLV.getCheckedItemPositions();
+            for (int i = 0; i < checked.size(); i++) {
+                int key = checked.keyAt(i);
+                boolean value = checked.get(key);
+                if (value) {
+                    Log.d("MainActivity", "Selected = " + types.get(checked.indexOfKey(i)));
+                    selectedTypes.add(types.get(checked.indexOfKey(i)));
+                }
+            }
+        }
     }
 
     private void checkEnableGPS() {
