@@ -66,15 +66,6 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        Button button = (Button)findViewById(R.id.showPlacesButton);
-
-        button.setOnClickListener(
-                new Button.OnClickListener() {
-                    public void onClick(View v) {
-
-                    }
-                }
-        );
 
         LocationManager locationManager = (LocationManager)getSystemService((Context.LOCATION_SERVICE));
         LocationListener listener = new LocationListener() {
