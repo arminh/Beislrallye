@@ -64,10 +64,27 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     public static final String API_KEY = "AIzaSyDOxZCpw4hqUFUNeEgpBBz_THnTJf1IveE";
     private List<String> types;
 
+    private ArrayList<String> selectedTypes;
+    private int numOfLocations;
+    private LatLng startPointAddress = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        startPoint = (EditText) findViewById(R.id.start_point);
+        locationCount = (EditText) findViewById(R.id.location_count);
+        locationTypeLV = (ListView) findViewById(R.id.location_type_lv);
+
+        ArrayAdapter<String> adapter;
+
+        types = new ArrayList<>();
+        types.add("Bar");
+        types.add("Cafe");
+        types.add("Nightclub");
+        types.add("Restraurant");
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -77,12 +94,12 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        LocationManager locationManager = (LocationManager)getSystemService((Context.LOCATION_SERVICE));
+        final LocationManager locationManager = (LocationManager)getSystemService((Context.LOCATION_SERVICE));
         LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 currentPos = new LatLng(location.getLatitude(), location.getLongitude());
-                Log.i("currentPos", currentPos.toString());
+                locationManager.removeUpdates(this);
             }
 
             @Override
@@ -104,18 +121,6 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000L, 500.0f, listener);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000L, 500.0f, listener);
 
-        startPoint = (EditText) findViewById(R.id.start_point);
-        locationCount = (EditText) findViewById(R.id.location_count);
-        locationTypeLV = (ListView) findViewById(R.id.location_type_lv);
-
-        ArrayAdapter<String> adapter;
-
-        types = new ArrayList<>();
-        types.add("Bar");
-        types.add("Cafe");
-        types.add("Nightclub");
-        types.add("Restraurant");
-
         adapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_multiple_choice,
@@ -131,24 +136,11 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         });
     }
 
-    private void handleOnComputeClick() {
-        if(startPoint.getText().toString() == "" || locationCount.getText().toString() == "") {
-            Toast.makeText(this, "Ausgangspunkt und Anzahl müssen ausgefüllt sein", Toast.LENGTH_SHORT).show();
-        } else {
-            String startPointAddress = startPoint.getText().toString();
-            int numOfLocations = Integer.parseInt(locationCount.getText().toString());
-            ArrayList<String> selectedTypes = new ArrayList<>();
-
-            SparseBooleanArray checked = locationTypeLV.getCheckedItemPositions();
-            for (int i = 0; i < checked.size(); i++) {
-                int key = checked.keyAt(i);
-                boolean value = checked.get(key);
-                if (value) {
-                    Log.d("MainActivity", "Selected = " + types.get(checked.indexOfKey(i)));
-                    selectedTypes.add(types.get(checked.indexOfKey(i)));
-                }
-            }
-        }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkEnableGPS();
+        mGoogleApiClient.connect();
     }
 
     private void checkEnableGPS() {
@@ -172,17 +164,45 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        checkEnableGPS();
+    private void handleOnComputeClick() {
+        if(startPoint.getText().toString() == "" || locationCount.getText().toString() == "") {
+            Toast.makeText(this, "Ausgangspunkt und Anzahl müssen ausgefüllt sein", Toast.LENGTH_SHORT).show();
+        } else {
+            //startPointAddress = startPoint.getText().toString();
+            numOfLocations = Integer.parseInt(locationCount.getText().toString());
+            selectedTypes = new ArrayList<>();
 
+            SparseBooleanArray checked = locationTypeLV.getCheckedItemPositions();
+            for (int i = 0; i < checked.size(); i++) {
+                int key = checked.keyAt(i);
+                boolean value = checked.get(key);
+                if (value) {
+                    Log.d("MainActivity", "Selected = " + types.get(checked.indexOfKey(i)));
+                    selectedTypes.add(types.get(checked.indexOfKey(i)));
+                }
+            }
 
-        mGoogleApiClient.connect();
-        prepareRallye();
-
-
+            prepareRallye();
+        }
     }
+
+    private void prepareRallye() {
+
+
+        if(startPointAddress == null) {
+            if(currentPos == null) {
+                LocationControl loc = new LocationControl();
+                loc.execute();
+            }
+            else {
+                getNearestPlaces(currentPos);
+            }
+
+        } else {
+            getNearestPlaces(startPointAddress);
+        }
+    }
+
 
     private class LocationControl extends AsyncTask<Context, Void, Void>
     {
@@ -221,37 +241,9 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     }
 
-
-    private void prepareRallye() {
-
-        //getStartingPoint
-        LatLng startingPoint = null;
-
-
-        if(startingPoint == null) {
-            if(currentPos == null) {
-                LocationControl loc = new LocationControl();
-                loc.execute();
-            }
-            else {
-                getNearestPlaces(currentPos);
-            }
-
-        } else {
-            getNearestPlaces(startingPoint);
-        }
-    }
-
     private void getNearestPlaces(LatLng startingPoint) {
-        //getTypes
-        Vector<String> types = new Vector<String>();
-        types.add("bar");
-        // types.add("night_club");
 
-        //getnumPlaces
-        numPlaces = 5;
-
-        String url = makeURL(startingPoint, types);
+        String url = makeURL(startPointAddress, selectedTypes);
         WebConnectionTask connect = new WebConnectionTask(url, this);
         connect.execute();
     }
@@ -259,12 +251,26 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     @Override
     public <T> void onTaskCompleted(String result) {
         try {
+            JSONArray places = new JSONArray();
+
             //Tranform the string into a json object
             final JSONObject json = new JSONObject(result);
             JSONArray results = json.getJSONArray("results");
-            Intent intent = new Intent(this, PlacesPreviewActivity.class);
-            intent.putExtra("place", results.getString(0));
+
+            for(int i=0; i < 5; i++) {
+                places.put(results.getJSONObject(i));
+
+            }
+
+            String placesString = places.toString();
+
+            Intent intent = new Intent(this, MapsActivity.class);
+            intent.putExtra("places", placesString);
             startActivity(intent);
+
+//            Intent intent = new Intent(this, PlacesPreviewActivity.class);
+//            intent.putExtra("place", results.getString(0));
+//            startActivity(intent);
 
         }
         catch (JSONException e) {
@@ -281,7 +287,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         startActivity(intent);
     }
 
-    public String makeURL (LatLng location, Vector<String> types){
+    public String makeURL (LatLng location, ArrayList<String> types){
         StringBuilder urlString = new StringBuilder();
         urlString.append("https://maps.googleapis.com/maps/api/place/nearbysearch/json");
         urlString.append("?location=");
