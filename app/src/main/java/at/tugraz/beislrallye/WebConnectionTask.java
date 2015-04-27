@@ -31,38 +31,39 @@ import java.util.Map;
  */
 public class WebConnectionTask extends AsyncTask<HashMap<String, String>, Void, String> {
     private static final String LOG_TAG = "WebConnectionTask";
-    private OnWebConnectionTaskCompletedListener listener;
-    private String url;
 
-    public WebConnectionTask(String url, OnWebConnectionTaskCompletedListener listener){
-        this.listener = listener;
-        this.url = url;
-    }
+            private OnWebConnectionTaskCompletedListener listener;
+            private String url;
 
-    @Override
-    protected String doInBackground(HashMap<String, String>... params) {
-        Log.e(LOG_TAG, "doInBackground");
-        if(url == null || url == "")
-            return null;
-        try {
-            Log.e(LOG_TAG, "url = " + url);
-            String result = "";
-            InputStream is;
-            try{
-                DefaultHttpClient httpClient = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost(url);
-
-                HttpResponse httpResponse = httpClient.execute(httpPost);
-                HttpEntity httpEntity = httpResponse.getEntity();
-                is = httpEntity.getContent();
-
-                result = convertToString(is);
-                Log.e(LOG_TAG, "result = " + result);
-                return result;
-            }catch(Exception e){
-                Log.e(LOG_TAG, "Error converting result "+e.toString());
-                return null;
+            public WebConnectionTask(String url, OnWebConnectionTaskCompletedListener listener){
+                this.listener = listener;
+                this.url = url;
             }
+
+            @Override
+            protected String doInBackground(HashMap<String, String>... params) {
+                Log.e(LOG_TAG, "doInBackground");
+                if(url == null || url == "")
+                    return null;
+                try {
+                    Log.e(LOG_TAG, "url = " + url);
+                    String result = "";
+                    InputStream is;
+                    try{
+                        DefaultHttpClient httpClient = new DefaultHttpClient();
+                        HttpPost httpPost = new HttpPost(url);
+
+                        HttpResponse httpResponse = httpClient.execute(httpPost);
+                        HttpEntity httpEntity = httpResponse.getEntity();
+                        is = httpEntity.getContent();
+
+                        result = convertToString(is);
+                        Log.e(LOG_TAG, "result = " + result);
+                        return result;
+                    }catch(Exception e){
+                        Log.e(LOG_TAG, "Error converting result "+e.toString());
+                        return null;
+                    }
         } catch (Exception e) {
             Log.e(LOG_TAG, "Error in async task "+e.toString());
             return null;

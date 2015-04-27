@@ -5,4 +5,6 @@
     <string name="title_activity_places_preview">PlacesPreviewActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_consumption">ConsumptionActivity</string>
 </resources>

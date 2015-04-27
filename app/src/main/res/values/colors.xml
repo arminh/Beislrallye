@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#039be5</color>
+    <color name="colorPrimaryMedium">#2a5d96</color>
+    <color name="colorPrimaryDark">#1c5493</color>
+    <color name="colorPrimaryComplementary">#e8bc0c</color>
+    <color name="colorPrimaryComplementaryDark">#CFAA15</color>
+    <color name="colorBackgroundLight">#f7f9f9</color>
+    <color name="colorBackgroundLightTransparent">#CCf7f9f9</color>
+    <color name="colorBackgroundDark">#a1b2b3</color>
+    <color name="colorOverlay">#BBa1b2b3</color>
+    <color name="colorSecondaryDark">#585c60</color>
+    <color name="colorSecondaryLight">#85898a</color>
+    <color name="blackSemiTransparent">#CC000000</color>
+    <color name="colorWhite">#fafafa</color>
+    <color name="colorWhitePressed">#f1f1f1</color>
+
+</resources>

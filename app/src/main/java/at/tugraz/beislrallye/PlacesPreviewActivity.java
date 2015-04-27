@@ -1,7 +1,6 @@
 package at.tugraz.beislrallye;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,15 +9,9 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.Vector;
 
 
 public class PlacesPreviewActivity extends ActionBarActivity implements OnDownloadImageCompletedListener {
@@ -60,9 +53,6 @@ public class PlacesPreviewActivity extends ActionBarActivity implements OnDownlo
             JSONArray photos = place.getJSONArray("photos");
             JSONObject photo = photos.getJSONObject(0);
             loadPhoto(photo);
-
-
-
 
         } catch (JSONException e) {
             e.printStackTrace();

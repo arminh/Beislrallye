@@ -9,3 +9,4 @@ import java.util.ArrayList;
 public interface OnWebConnectionTaskCompletedListener {
     public <T> void onTaskCompleted(String result);
 }
+

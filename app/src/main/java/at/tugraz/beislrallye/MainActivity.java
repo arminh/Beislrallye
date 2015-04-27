@@ -123,7 +123,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             Dialog alertDialog = builder.create();
             alertDialog.setCanceledOnTouchOutside(false);
             alertDialog.show();
-            }
+        }
     }
 
     @Override
@@ -200,7 +200,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         //getTypes
         Vector<String> types = new Vector<String>();
         types.add("bar");
-       // types.add("night_club");
+        // types.add("night_club");
 
         //getnumPlaces
         numPlaces = 5;
@@ -231,7 +231,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     private void showPlaceDetails(Place place) {
         Intent intent = new Intent(this, PlacesPreviewActivity.class);
 
-       // intent.putExtra("place", place);
+        // intent.putExtra("place", place);
         startActivity(intent);
     }
 
@@ -254,7 +254,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             }
         }
 
-       // urlString.append("&rankby=distance");
+        // urlString.append("&rankby=distance");
         urlString.append("&key=");
         urlString.append(API_KEY);
         Log.i(LOG_TAG, urlString.toString());
