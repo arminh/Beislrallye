@@ -25,7 +25,9 @@ public class PlacesPreviewActivity extends ActionBarActivity implements OnDownlo
         setContentView(R.layout.activity_places_preview);
 
         Bundle extras = getIntent().getExtras();
-
+        Place place = (Place) getIntent().getSerializableExtra("place");
+        Log.d("PlacesPreviewActivity", "Place " + place != null ? place.getName() : "not found");
+        /*
         String placeStr;
         if(extras == null) {
             placeStr= null;
@@ -39,7 +41,7 @@ public class PlacesPreviewActivity extends ActionBarActivity implements OnDownlo
             }
 
 
-        }
+        } */
     }
 
     protected void parsePlace(JSONObject place) {

@@ -83,8 +83,8 @@ public class StableArrayAdapter extends ArrayAdapter<Place> {
                 getContext().startActivity(i);
             }
         });
-        if(place.getType() == PlaceType.LOCATION)
-            v.findViewById(R.id.visited_image).setVisibility(View.GONE);
+        //if(place.getType() == PlaceType.LOCATION)
+        //    v.findViewById(R.id.visited_image).setVisibility(View.GONE);
 
         return v;
 

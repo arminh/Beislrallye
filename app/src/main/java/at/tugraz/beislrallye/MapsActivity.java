@@ -140,6 +140,10 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
         } else {
             Log.d(LOG_TAG, "Place == null " + marker.hashCode());
         }
+        Intent intent = new Intent(this,PlacesPreviewActivity.class);
+        intent.putExtra("place", place);
+
+        startActivity(intent);
     }
 
     private void queryDirectionsApi(boolean optimize) {
@@ -147,7 +151,7 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
         if(currentLocation != null) {
             locations.add(currentLocation);
             for (Place place : places) {
-                locations.add(place.getLocation());
+                locations.add(new LatLng(place.getLat(), place.getLng()));
             }
             locations.add(finalLocation);
             String url = URLCreator.createDirectionURL(locations, optimize);
@@ -213,7 +217,7 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
             IconGenerator tc = new IconGenerator(this);
             tc.setStyle(IconGenerator.STYLE_RED);
             Bitmap bmp = tc.makeIcon("" + (i + 1));
-            MarkerOptions placeMarker = new MarkerOptions().position(place.getLocation());
+            MarkerOptions placeMarker = new MarkerOptions().position(new LatLng(place.getLat(), place.getLng()));
             placeMarker.icon(BitmapDescriptorFactory.fromBitmap(bmp));
             markerToPlaceMap.put(placeMarker.getPosition(), place);
             mapHandler.addMarker(placeMarker);

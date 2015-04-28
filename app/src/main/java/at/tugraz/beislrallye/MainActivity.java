@@ -178,7 +178,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 boolean value = checked.get(key);
                 if (value) {
                     Log.d("MainActivity", "Selected = " + types.get(checked.indexOfKey(i)));
-                    selectedTypes.add(types.get(checked.indexOfKey(i)));
+                    selectedTypes.add(types.get(checked.indexOfKey(i)).toLowerCase());
                 }
             }
 
