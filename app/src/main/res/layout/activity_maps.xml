@@ -1,0 +1,104 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="at.tugraz.beislrallye.MapsActivity"
+    android:orientation="vertical"
+    android:weightSum="10">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="4">
+
+        <at.tugraz.beislrallye.DynamicListView
+            android:id="@+id/places_lv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </at.tugraz.beislrallye.DynamicListView>
+
+        <RelativeLayout
+            android:id="@+id/error_container"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/retry_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Retry"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/retry_button"
+                android:layout_centerHorizontal="true"
+                android:text="Verbindungsfehler"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5">
+
+        <fragment
+            class="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/map"/>
+
+        <RelativeLayout
+            android:id="@+id/beisl_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/accent_material_light"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Beisl Name"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"/>
+
+            <TextView
+                android:id="@+id/address_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Addresse"
+                android:layout_below="@id/title_text"
+                android:layout_marginTop="5dp"
+                android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"/>
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/load_map_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorOverlay">
+        </View>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/finalize_ralley_button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimaryComplementary"
+        android:layout_below="@id/places_lv"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@android:color/black"
+            android:text="RALLEY BEENDEN"/>
+    </RelativeLayout>
+</LinearLayout>
