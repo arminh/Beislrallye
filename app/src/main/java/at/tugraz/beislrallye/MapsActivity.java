@@ -132,14 +132,14 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
     }
 
     private void showBeislDetails(Marker marker) {
-        findViewById(R.id.beisl_detail).setVisibility(View.VISIBLE);
-        Place place = markerToPlaceMap.get(marker.getPosition());
+        /*findViewById(R.id.beisl_detail).setVisibility(View.VISIBLE);
         if(place != null) {
             ((TextView) findViewById(R.id.title_text)).setText(place.getName());
             ((TextView) findViewById(R.id.address_text)).setText(place.getAddress());
         } else {
             Log.d(LOG_TAG, "Place == null " + marker.hashCode());
-        }
+        } */
+        Place place = markerToPlaceMap.get(marker.getPosition());
         Intent intent = new Intent(this,PlacesPreviewActivity.class);
         intent.putExtra("place", place);
 
