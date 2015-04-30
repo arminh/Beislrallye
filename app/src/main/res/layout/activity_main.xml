@@ -106,14 +106,13 @@
                 android:text="@string/description_start_point"/>
         </RelativeLayout>
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/start_point"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="30dp"
             android:layout_marginLeft="30dp"
-            android:gravity="center_horizontal"
-            android:inputType="text"/>
+            android:gravity="center_horizontal"/>
 
     </LinearLayout>
     </ScrollView>

@@ -8,4 +8,12 @@
     <string name="title_activity_places_preview">PlacesPreviewActivity</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="title_activity_consumption">ConsumptionActivity</string>
+    <string name="title_activity_summary"></string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="summary">Zusammenfassung</string>
+    <string name="consumtion">Konsum</string>
+    <string name="start">Start: </string>
+    <string name="end">Ende: </string>
+    <string name="duration">Dauer: </string>
 </resources>
