@@ -127,8 +127,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 this,
                 android.R.layout.simple_list_item_multiple_choice,
                 types);
-        locationTypeLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         locationTypeLV.setAdapter(adapter);
+        locationTypeLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
         findViewById(R.id.compute_ralley_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +144,10 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         
     }
 
+
+    public ListView getListView() {
+        return locationTypeLV;
+    }
 
     @Override
     protected void onStart() {
@@ -173,23 +177,27 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     private void handleOnComputeClick() {
-        if (startPoint.getText().toString() == "" || locationCount.getText().toString() == "") {
-            Toast.makeText(this, "Ausgangspunkt und Anzahl müssen ausgefüllt sein", Toast.LENGTH_SHORT).show();
+        if (locationCount.getText().toString().matches("")) {
+            Toast.makeText(this, "Bitte die gewünschte Anzahl an Beisln angeben", Toast.LENGTH_SHORT).show();
         } else {
             numOfLocations = Integer.parseInt(locationCount.getText().toString());
             selectedTypes = new ArrayList<>();
 
             SparseBooleanArray checked = locationTypeLV.getCheckedItemPositions();
-            for (int i = 0; i < checked.size(); i++) {
-                int key = checked.keyAt(i);
-                boolean value = checked.get(key);
-                if (value) {
-                    Log.d("MainActivity", "Selected = " + types.get(checked.indexOfKey(i)));
-                    selectedTypes.add(types.get(checked.indexOfKey(i)).toLowerCase());
+            if(checked.size() <= 0) {
+                Toast.makeText(this, "Bitte mindestens einen Beisl-Typ auswählen", Toast.LENGTH_SHORT).show();
+            } else {
+                for (int i = 0; i < checked.size(); i++) {
+                    int key = checked.keyAt(i);
+                    boolean value = checked.get(key);
+                    if (value) {
+                        Log.d("MainActivity", "Selected = " + types.get(checked.indexOfKey(i)));
+                        selectedTypes.add(types.get(checked.indexOfKey(i)).toLowerCase());
+                    }
                 }
-            }
 
-            prepareRallye();
+                prepareRallye();
+            }
         }
     }
 

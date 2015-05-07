@@ -22,14 +22,6 @@ public class URLCreatorTest extends TestCase {
         arr[1] = way2;
         String result = URLCreator.createDirectionURL(start, end, arr, true);
         assertEquals(expected, result);
-
-        expected = "http://maps.googleapis.com/maps/api/directions/json?origin=47.0838007,15.4934076&destination=47.1056545,15.6835298&sensor=false&mode=walking";
-
-        ArrayList<LatLng> arrayList = new ArrayList<>();
-        arrayList.add(way);
-        arrayList.add(way2);
-        result = URLCreator.createDirectionURL(arrayList, true);
-        assertEquals(expected, result);
     }
 
     public void testCreateDirectionURLArray() {
@@ -48,8 +40,10 @@ public class URLCreatorTest extends TestCase {
         String result = URLCreator.createDirectionURL(locations, false);
         assertEquals(expected, result);
 
-        locations.remove(1);
-        locations.remove(2);
+        locations.clear();
+        locations.add(start);;
+        locations.add(end);
+
         expected = "http://maps.googleapis.com/maps/api/directions/json?origin=47.0838007,15.4934076&destination=47.1056545,15.6835298&sensor=false&mode=walking";
 
         result = URLCreator.createDirectionURL(locations, true);
