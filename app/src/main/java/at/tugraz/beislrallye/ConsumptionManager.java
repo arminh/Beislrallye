@@ -50,4 +50,8 @@ public class ConsumptionManager {
         }
         return allConsumptions;
     }
+
+    public void reset() {
+        consumptions = new HashMap<>();
+    }
 }

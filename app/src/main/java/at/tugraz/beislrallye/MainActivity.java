@@ -12,7 +12,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.provider.Settings;
-import android.provider.Settings.Secure;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,11 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.util.SparseBooleanArray;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -43,7 +38,6 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -53,10 +47,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 
 public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, OnWebConnectionTaskCompletedListener, AdapterView.OnItemClickListener {
@@ -148,8 +140,9 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     public void onItemClick(AdapterView adapterView, View view, int position, long id) {
-        String str = (String) adapterView.getItemAtPosition(position);
-        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+        AutocompleteData data = ((GooglePlacesAutocompleteAdapter)adapterView.getAdapter()).getAutoCompleteData(position);
+        Toast.makeText(this, data.getDescription(), Toast.LENGTH_SHORT).show();
+        
     }
 
 
@@ -211,7 +204,6 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             } else {
                 getNearestPlaces(currentPos);
             }
-
         } else {
             getNearestPlaces(startPointAddress);
         }
@@ -377,7 +369,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     public static ArrayList autocomplete(String input) {
-        ArrayList resultList = null;
+        ArrayList<AutocompleteData> resultList = null;
 
         HttpURLConnection conn = null;
         StringBuilder jsonResults = new StringBuilder();
@@ -412,8 +404,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             resultList = new ArrayList(predsJsonArray.length());
             for (int i = 0; i < predsJsonArray.length(); i++) {
                 System.out.println(predsJsonArray.getJSONObject(i).getString("description"));
-                System.out.println("============================================================");
-                resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
+                resultList.add(new AutocompleteData(predsJsonArray.getJSONObject(i).getString("description"), predsJsonArray.getJSONObject(i).getString("place_id")));
             }
         } catch (JSONException e) {
             Log.e(LOG_TAG, "Cannot process JSON results", e);
@@ -423,7 +414,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     class GooglePlacesAutocompleteAdapter extends ArrayAdapter implements Filterable {
-        private ArrayList resultList;
+        private ArrayList<AutocompleteData> resultList;
+        private ArrayList<String> stringResults;
 
         public GooglePlacesAutocompleteAdapter(Context context, int textViewResourceId) {
             super(context, textViewResourceId);
@@ -436,8 +428,10 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
         @Override
         public String getItem(int index) {
-            return (String) resultList.get(index);
+            return stringResults.get(index);
         }
+
+        public AutocompleteData getAutoCompleteData(int index) {return resultList.get(index); }
 
         @Override
         public Filter getFilter() {
@@ -450,8 +444,13 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                         resultList = autocomplete(constraint.toString());
 
                         // Assign the data to the FilterResults
-                        filterResults.values = resultList;
-                        filterResults.count = resultList.size();
+                        if(resultList != null) {
+                            stringResults = new ArrayList<>(resultList.size());
+                            for(AutocompleteData data : resultList)
+                                stringResults.add(data.getDescription());
+                            filterResults.values = stringResults;
+                            filterResults.count = resultList.size();
+                        }
                     }
                     return filterResults;
                 }
