@@ -42,7 +42,7 @@ public class URLCreator {
         while (itr.hasNext()) {
             urlString.append(itr.next());
             if (itr.hasNext()) {
-                urlString.append("%7c");
+                urlString.append("%7C");
             }
         }
 

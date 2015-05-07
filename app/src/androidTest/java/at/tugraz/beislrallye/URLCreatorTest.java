@@ -33,7 +33,7 @@ public class URLCreatorTest extends TestCase {
     }
 
     public void testCreateDirectionURLArray() {
-        String expected = "http://maps.googleapis.com/maps/api/directions/json?origin=47.0838007,15.4934076&destination=47.1056545,15.6835298&waypoints=optimize:true%7C47.2056545,15.7335298%7C47.2056545,15.7735298&sensor=false&mode=walking";
+        String expected = "http://maps.googleapis.com/maps/api/directions/json?origin=47.0838007,15.4934076&destination=47.1056545,15.6835298&waypoints=optimize:false%7C47.2056545,15.7335298%7C47.2056545,15.7735298&sensor=false&mode=walking";
         LatLng start = new LatLng(47.0838007, 15.4934076);
         LatLng end = new LatLng(47.1056545, 15.6835298);
         LatLng way = new LatLng(47.2056545, 15.7335298);
@@ -45,7 +45,7 @@ public class URLCreatorTest extends TestCase {
         locations.add(way2);
         locations.add(end);
 
-        String result = URLCreator.createDirectionURL(locations, true);
+        String result = URLCreator.createDirectionURL(locations, false);
         assertEquals(expected, result);
 
         locations.remove(1);
@@ -57,7 +57,7 @@ public class URLCreatorTest extends TestCase {
     }
 
     public void testCreateNearbyURL() {
-        String expected = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=47.0838007,15.4934076&radius=1000&types=bar%7ccafe&key=AIzaSyDOxZCpw4hqUFUNeEgpBBz_THnTJf1IveE";
+        String expected = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=47.0838007,15.4934076&radius=1000&types=bar%7Ccafe&key=AIzaSyDOxZCpw4hqUFUNeEgpBBz_THnTJf1IveE";
 
         LatLng loc = new LatLng(47.0838007, 15.4934076);
         ArrayList<String> types = new ArrayList<String>();
