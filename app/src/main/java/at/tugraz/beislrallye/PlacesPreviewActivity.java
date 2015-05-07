@@ -15,10 +15,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 
 public class PlacesPreviewActivity extends ActionBarActivity implements OnDownloadImageCompletedListener {
 
@@ -53,7 +49,7 @@ public class PlacesPreviewActivity extends ActionBarActivity implements OnDownlo
     protected void loadPhoto(String id) {
         int width = 300;
         int height = 200;
-        String url = makeURL(id, width, height);
+        String url = URLCreator.createPhotoURL(id, width, height);
 
         DownloadImageTask connect = new DownloadImageTask(url, this);
         connect.execute();
@@ -79,20 +75,6 @@ public class PlacesPreviewActivity extends ActionBarActivity implements OnDownlo
         pic.setImageBitmap(result);
     }
 
-    public String makeURL (String ref, int width, int height) {
-        StringBuilder urlString = new StringBuilder();
-        urlString.append("https://maps.googleapis.com/maps/api/place/photo?");
-        urlString.append("photoreference=");
-        urlString.append(ref);
-        urlString.append("&maxwidth=");
-        urlString.append(Integer.toString(width));
-        urlString.append("&key=");
-        urlString.append(API_KEY);
-        Log.i(LOG_TAG, urlString.toString());
-
-        return urlString.toString();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -103,12 +85,8 @@ public class PlacesPreviewActivity extends ActionBarActivity implements OnDownlo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

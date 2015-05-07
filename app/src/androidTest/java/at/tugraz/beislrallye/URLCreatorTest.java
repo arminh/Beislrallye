@@ -55,4 +55,25 @@ public class URLCreatorTest extends TestCase {
         result = URLCreator.createDirectionURL(locations, true);
         assertEquals(expected, result);
     }
+
+    public void testCreateNearbyURL() {
+        String expected = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=47.0838007,15.4934076&radius=1000&types=bar%7ccafe&key=AIzaSyDOxZCpw4hqUFUNeEgpBBz_THnTJf1IveE";
+
+        LatLng loc = new LatLng(47.0838007, 15.4934076);
+        ArrayList<String> types = new ArrayList<String>();
+        types.add("bar");
+        types.add("cafe");
+
+        String result = URLCreator.createNearbyURL(loc, types);
+        assertEquals(expected, result);
+    }
+
+    public void testCreatePhotoURL() {
+        String expected = "https://maps.googleapis.com/maps/api/place/photo?photoreference=CoQBdwAAALUvaVhmUFU8jHUEYNGwvfcZ_wBQf-KGIjDxP1HrE1v9pJTGuO3YrR5uTqisRWHoWE3YDtMzNgZw8iBWeFFSMSzxolDkE8y2lu7zX8Nm2i5lO2-yfa02e-9fnn-XG130c13Fdq1tEu361m_-Ws4j0np_YIKToQ8BiVt6MvwM0EHwEhAiCZ5qmTt-5rjC0bYDz59qGhTbAsQOnu6b7AFeQx8O0_8tPiNqUw&maxwidth=300&key=AIzaSyDOxZCpw4hqUFUNeEgpBBz_THnTJf1IveE";
+
+        String ref = "CoQBdwAAALUvaVhmUFU8jHUEYNGwvfcZ_wBQf-KGIjDxP1HrE1v9pJTGuO3YrR5uTqisRWHoWE3YDtMzNgZw8iBWeFFSMSzxolDkE8y2lu7zX8Nm2i5lO2-yfa02e-9fnn-XG130c13Fdq1tEu361m_-Ws4j0np_YIKToQ8BiVt6MvwM0EHwEhAiCZ5qmTt-5rjC0bYDz59qGhTbAsQOnu6b7AFeQx8O0_8tPiNqUw";
+        String result = URLCreator.createPhotoURL(ref, 300, 300);
+
+        assertEquals(expected, result);
+    }
 }
