@@ -32,9 +32,11 @@ public class PlacesPreviewActivity extends ActionBarActivity implements OnDownlo
 
         Bundle extras = getIntent().getExtras();
         Place place = (Place) getIntent().getSerializableExtra("place");
-        Log.d("PlacesPreviewActivity", "Place " + place != null ? place.getName() : "not found");
+        if(place != null) {
+            Log.d("PlacesPreviewActivity", "Place " + place != null ? place.getName() : "not found");
 
-        previewPlace(place);
+            previewPlace(place);
+        }
     }
 
     protected void previewPlace(Place place) {
