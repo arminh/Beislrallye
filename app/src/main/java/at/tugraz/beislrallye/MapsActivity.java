@@ -112,9 +112,9 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
     }
 
     private void handleOnFinalizeClick() {
-//        RalleyStatisticsManager.getInstance().setEndTime(new Date());
-//        Intent intent = new Intent(MapsActivity.this, SummaryActivity.class);
-//        this.startActivity(intent);
+        RalleyStatisticsManager.getInstance().setEndTime(new Date());
+        Intent intent = new Intent(MapsActivity.this, SummaryActivity.class);
+        this.startActivity(intent);
     }
 
     private void handleOnRetryClick() {

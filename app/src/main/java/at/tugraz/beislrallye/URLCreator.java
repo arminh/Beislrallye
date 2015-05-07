@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -48,4 +49,12 @@ public class URLCreator {
         return Double.toString(latlng.latitude) + "," + Double.toString(latlng.longitude);
     }
 
+    public static String createAutocompleteURL(String apiKey, String countryCode, String input) {
+        StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place" + "/autocomplete" + "/json");
+        sb.append("?key=" + apiKey);
+        sb.append("&components=country:" + countryCode);
+        sb.append("&input=" + input);
+
+        return sb.toString();
+    }
 }
