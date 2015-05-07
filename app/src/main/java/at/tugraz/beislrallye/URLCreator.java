@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Created by Matthias on 27.03.2015.
@@ -26,6 +27,43 @@ public class URLCreator {
         return urlString.toString();
     }
 
+    public static String createNearbyURL(LatLng location, ArrayList<String> types) {
+        StringBuilder urlString = new StringBuilder();
+        urlString.append("https://maps.googleapis.com/maps/api/place/nearbysearch/json");
+        urlString.append("?location=");
+        urlString.append(Double.toString(location.latitude));
+        urlString.append(",");
+        urlString.append(Double.toString(location.longitude));
+        urlString.append("&radius=");
+        urlString.append("1000");
+        urlString.append("&types=");
+
+        final Iterator itr = types.iterator();
+        while (itr.hasNext()) {
+            urlString.append(itr.next());
+            if (itr.hasNext()) {
+                urlString.append("%7C");
+            }
+        }
+
+        urlString.append("&key=");
+        urlString.append(Constants.API_KEY);
+
+        return urlString.toString();
+    }
+
+    public static String createPhotoURL (String ref, int width, int height) {
+        StringBuilder urlString = new StringBuilder();
+        urlString.append("https://maps.googleapis.com/maps/api/place/photo?");
+        urlString.append("photoreference=");
+        urlString.append(ref);
+        urlString.append("&maxwidth=");
+        urlString.append(Integer.toString(width));
+        urlString.append("&key=");
+        urlString.append(Constants.API_KEY);
+
+        return urlString.toString();
+    }
 
     public static String createDirectionURL(ArrayList<LatLng> locations, boolean optimize) {
         LatLng[] a = new LatLng[locations.size() - 2];

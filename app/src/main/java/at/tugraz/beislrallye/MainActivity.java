@@ -62,8 +62,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     private int numPlaces;
 
-    //public static final String API_KEY = "AIzaSyCgW9vZAP_Xc-5gdRMxHfv-vnuECmNccpg";
-    public static final String API_KEY = "AIzaSyDOxZCpw4hqUFUNeEgpBBz_THnTJf1IveE";
+
     private List<String> types;
 
     private ArrayList<String> selectedTypes;
@@ -163,7 +162,6 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             builder.setMessage("Please enable Location Services and GPS");
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    // Show location settings when the user acknowledges the alert dialog
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(intent);
                 }
@@ -178,7 +176,6 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         if (startPoint.getText().toString() == "" || locationCount.getText().toString() == "") {
             Toast.makeText(this, "Ausgangspunkt und Anzahl müssen ausgefüllt sein", Toast.LENGTH_SHORT).show();
         } else {
-            //startPointAddress = startPoint.getText().toString();
             numOfLocations = Integer.parseInt(locationCount.getText().toString());
             selectedTypes = new ArrayList<>();
 
@@ -245,7 +242,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     private void getNearestPlaces(LatLng startingPoint) {
         if (startPointAddress == null)
             startPointAddress = new LatLng(47.0693154, 15.4422045);
-        String url = makeURL(startPointAddress, selectedTypes);
+        String url = URLCreator.createNearbyURL(startPointAddress, selectedTypes);
         WebConnectionTask connect = new WebConnectionTask(url, this);
         connect.execute();
     }
@@ -255,7 +252,6 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         try {
             JSONArray places = new JSONArray();
 
-            //Tranform the string into a json object
             final JSONObject json = new JSONObject(result);
             JSONArray results = json.getJSONArray("results");
             if (results.length() >= numOfLocations) {
@@ -269,49 +265,11 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             intent.putExtra("places", placesString);
             startActivity(intent);
 
-//            Intent intent = new Intent(this, PlacesPreviewActivity.class);
-//            intent.putExtra("place", results.getString(0));
-//            startActivity(intent);
-
         } catch (JSONException e) {
             Log.e("MapsActivity", "Error in onTaskCompleted" + e.toString());
         }
 
 
-    }
-
-    private void showPlaceDetails(Place place) {
-        Intent intent = new Intent(this, PlacesPreviewActivity.class);
-
-        // intent.putExtra("place", place);
-        startActivity(intent);
-    }
-
-    public String makeURL(LatLng location, ArrayList<String> types) {
-        StringBuilder urlString = new StringBuilder();
-        urlString.append("https://maps.googleapis.com/maps/api/place/nearbysearch/json");
-        urlString.append("?location=");
-        urlString.append(Double.toString(location.latitude));
-        urlString.append(",");
-        urlString.append(Double.toString(location.longitude));
-        urlString.append("&radius=");
-        urlString.append("1000");
-        urlString.append("&types=");
-
-        final Iterator itr = types.iterator();
-        while (itr.hasNext()) {
-            urlString.append(itr.next());
-            if (itr.hasNext()) {
-                urlString.append('|');
-            }
-        }
-
-        // urlString.append("&rankby=distance");
-        urlString.append("&key=");
-        urlString.append(API_KEY);
-        Log.i(LOG_TAG, urlString.toString());
-
-        return urlString.toString();
     }
 
 
@@ -324,19 +282,14 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -354,10 +307,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        // Called whenever the API client fails to connect.
         Log.i(LOG_TAG, "GoogleApiClient connection failed: " + result.toString());
         if (!result.hasResolution()) {
-            // show the localized error dialog.
             GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this, 0).show();
             return;
         }
@@ -374,13 +325,12 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         HttpURLConnection conn = null;
         StringBuilder jsonResults = new StringBuilder();
         try {
-            String urlStr = URLCreator.createAutocompleteURL(API_KEY, "at", URLEncoder.encode(input, "utf8"));
+            String urlStr = URLCreator.createAutocompleteURL(Constants.API_KEY, "at", URLEncoder.encode(input, "utf8"));
             Log.d(LOG_TAG, "Autocomplete URL = " + urlStr);
             URL url = new URL(urlStr);
             conn = (HttpURLConnection) url.openConnection();
             InputStreamReader in = new InputStreamReader(conn.getInputStream());
 
-            // Load the results into a StringBuilder
             int read;
             char[] buff = new char[1024];
             while ((read = in.read(buff)) != -1) {
@@ -440,10 +390,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 protected FilterResults performFiltering(CharSequence constraint) {
                     FilterResults filterResults = new FilterResults();
                     if (constraint != null) {
-                        // Retrieve the autocomplete results.
                         resultList = autocomplete(constraint.toString());
 
-                        // Assign the data to the FilterResults
                         if(resultList != null) {
                             stringResults = new ArrayList<>(resultList.size());
                             for(AutocompleteData data : resultList)
