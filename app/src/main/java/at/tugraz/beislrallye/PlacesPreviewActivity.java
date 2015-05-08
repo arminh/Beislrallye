@@ -9,9 +9,11 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class PlacesPreviewActivity extends ActionBarActivity implements OnDownloadImageCompletedListener {
@@ -26,75 +28,53 @@ public class PlacesPreviewActivity extends ActionBarActivity implements OnDownlo
 
         Bundle extras = getIntent().getExtras();
         Place place = (Place) getIntent().getSerializableExtra("place");
-        Log.d("PlacesPreviewActivity", "Place " + place != null ? place.getName() : "not found");
-        /*
-        String placeStr;
-        if(extras == null) {
-            placeStr= null;
-        } else {
-            placeStr= extras.getString("place");
-            try {
-                JSONObject jPlace = new JSONObject(placeStr);
-                parsePlace(jPlace);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        if(place != null) {
+            Log.d("PlacesPreviewActivity", "Place " + place != null ? place.getName() : "not found");
 
-
-        } */
+            previewPlace(place);
+        }
     }
 
-    protected void parsePlace(JSONObject place) {
+    protected void previewPlace(Place place) {
 
         TextView title = (TextView)findViewById(R.id.placeName);
+        title.setText(place.getName());
 
-        try {
-            String name = place.getString("name");
-            title.setText(name);
+        TextView address = (TextView)findViewById(R.id.placeAddress);
+        address.setText(place.getAddress());
 
-            JSONArray photos = place.getJSONArray("photos");
-            JSONObject photo = photos.getJSONObject(0);
-            loadPhoto(photo);
+        loadPhoto(place.getPhotoId());
+        loadMap(place.getLat(), place.getLng());
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
-    protected void loadPhoto(JSONObject photo) {
-        try {
-            String ref = photo.getString("photo_reference");
-            int width = 300;
-            int height = 200;
-            String url = makeURL(ref, width, height);
+    protected void loadPhoto(String id) {
+        int width = 300;
+        int height = 200;
+        String url = URLCreator.createPhotoURL(id, width, height);
 
-            DownloadImageTask connect = new DownloadImageTask(url, this);
-            connect.execute();
+        DownloadImageTask connect = new DownloadImageTask(url, this);
+        connect.execute();
+    }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    protected void loadMap(double lat, double lng) {
+        SupportMapFragment fm = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.previewMap);
+        GoogleMap map = fm.getMap();
 
+        MapHandler mapHandler = new MapHandler(map);
+        mapHandler.zoomTo(15);
+
+        MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng));
+        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
+        mapHandler.addMarker(marker);
+        mapHandler.moveCameraToFirstMarker();
     }
 
     @Override
     public <T> void onTaskCompleted(Bitmap result) {
         ImageView pic = (ImageView)findViewById(R.id.placePic);
         pic.setImageBitmap(result);
-    }
-
-    public String makeURL (String ref, int width, int height) {
-        StringBuilder urlString = new StringBuilder();
-        urlString.append("https://maps.googleapis.com/maps/api/place/photo?");
-        urlString.append("photoreference=");
-        urlString.append(ref);
-        urlString.append("&maxwidth=");
-        urlString.append(Integer.toString(width));
-        urlString.append("&key=");
-        urlString.append(API_KEY);
-        Log.i(LOG_TAG, urlString.toString());
-
-        return urlString.toString();
     }
 
 
@@ -107,12 +87,8 @@ public class PlacesPreviewActivity extends ActionBarActivity implements OnDownlo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

@@ -70,45 +70,47 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
         mapHandler = new MapHandler(map);
 
         String placesString = getIntent().getExtras().getString("places");
-        places = PlacesGenerator.generatePlaces(placesString);
+        if(placesString != null && placesString != "") {
+            places = PlacesGenerator.generatePlaces(placesString);
 
-        mapHandler.zoomTo(15);
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                showBeislDetails(marker);
-                return false;
-            }
-        });
-        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                findViewById(R.id.beisl_detail).setVisibility(View.INVISIBLE);
-            }
-        });
+            mapHandler.zoomTo(15);
+            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    showBeislDetails(marker);
+                    return false;
+                }
+            });
+            map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    findViewById(R.id.beisl_detail).setVisibility(View.INVISIBLE);
+                }
+            });
 
-        findViewById(R.id.retry_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleOnRetryClick();
-            }
-        });
+            findViewById(R.id.retry_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleOnRetryClick();
+                }
+            });
 
-        findViewById(R.id.load_map_overlay).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            findViewById(R.id.load_map_overlay).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-            }
-        });
+                }
+            });
 
-        findViewById(R.id.finalize_ralley_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleOnFinalizeClick();
-            }
-        });
-        createLocationsRequest();
-        //queryDirectionsApi(true);
+            findViewById(R.id.finalize_ralley_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleOnFinalizeClick();
+                }
+            });
+            createLocationsRequest();
+            //queryDirectionsApi(true);
+        }
     }
 
     private void handleOnFinalizeClick() {
@@ -132,14 +134,14 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
     }
 
     private void showBeislDetails(Marker marker) {
-        findViewById(R.id.beisl_detail).setVisibility(View.VISIBLE);
-        Place place = markerToPlaceMap.get(marker.getPosition());
+        /*findViewById(R.id.beisl_detail).setVisibility(View.VISIBLE);
         if(place != null) {
             ((TextView) findViewById(R.id.title_text)).setText(place.getName());
             ((TextView) findViewById(R.id.address_text)).setText(place.getAddress());
         } else {
             Log.d(LOG_TAG, "Place == null " + marker.hashCode());
-        }
+        } */
+        Place place = markerToPlaceMap.get(marker.getPosition());
         Intent intent = new Intent(this,PlacesPreviewActivity.class);
         intent.putExtra("place", place);
 
