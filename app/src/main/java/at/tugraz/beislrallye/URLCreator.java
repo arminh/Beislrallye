@@ -14,7 +14,6 @@ import java.util.Iterator;
  */
 public class URLCreator {
     public static String createDirectionURL (LatLng start, LatLng end, LatLng[] waypoints, boolean optimize){
-       // return "http://maps.googleapis.com/maps/api/directions/json?origin=Adelaide,SA&destination=Adelaide,SA&waypoints=optimize:true%7C-34.5333333,138.9500000&sensor=false";
 
         StringBuilder urlString = new StringBuilder();
         urlString.append("http://maps.googleapis.com/maps/api/directions/json");
