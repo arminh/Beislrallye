@@ -136,6 +136,17 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reset();
+    }
+
+    private void reset() {
+        findViewById(R.id.compute_ralley_button).setEnabled(true);
+        ((EditText) findViewById(R.id.location_count)).setText("");
+    }
+
     public void onItemClick(AdapterView adapterView, View view, int position, long id) {
         AutocompleteData data = ((GooglePlacesAutocompleteAdapter)adapterView.getAdapter()).getAutoCompleteData(position);
         Toast.makeText(this, data.getDescription(), Toast.LENGTH_SHORT).show();

@@ -1,5 +1,7 @@
 package at.tugraz.beislrallye;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -153,6 +155,20 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
             WebConnectionTask connect = new WebConnectionTask(url, this);
             connect.execute();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage(getResources().getString(R.string.want_quit))
+                .setCancelable(false)
+                .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        MapsActivity.this.finish();
+                    }
+                })
+                .setNegativeButton(getResources().getString(R.string.no), null)
+                .show();
     }
 
     @Override

@@ -33,4 +33,7 @@
     <string name="wine">Wine</string>
     <string name="shot">Shot</string>
     <string name="other">Other</string>
+    <string name="want_quit">Are you sure you want to go back? This will end the rallye.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

@@ -31,4 +31,7 @@
     <string name="wine">Wein</string>
     <string name="shot">Shot</string>
     <string name="other">Andere</string>
+    <string name="want_quit">Möchtest du wirklich zurück gehen? Dann wird die Rallye beendet.</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
 </resources>
