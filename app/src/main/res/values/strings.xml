@@ -26,4 +26,9 @@
     <string name="start">Start: </string>
     <string name="end">Ende: </string>
     <string name="duration">Dauer: </string>
+    <string name="beer">Bier</string>
+    <string name="cocktail">Cocktail</string>
+    <string name="wine">Wein</string>
+    <string name="shot">Shot</string>
+    <string name="other">Andere</string>
 </resources>
