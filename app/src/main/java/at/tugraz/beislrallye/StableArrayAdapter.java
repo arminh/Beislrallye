@@ -22,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -83,8 +82,6 @@ public class StableArrayAdapter extends ArrayAdapter<Place> {
                 getContext().startActivity(i);
             }
         });
-        //if(place.getType() == PlaceType.LOCATION)
-        //    v.findViewById(R.id.visited_image).setVisibility(View.GONE);
 
         return v;
 

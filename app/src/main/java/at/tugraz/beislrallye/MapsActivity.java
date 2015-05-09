@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -44,7 +43,7 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
     private ArrayList<Place> places = new ArrayList<>();
     private DynamicListView placesList;
     private MapHandler mapHandler;
-    private LatLng currentLocation = null;//new LatLng(47.0672434,15.4425523);
+    private LatLng currentLocation = null;
     private LatLng finalLocation = new LatLng(47.0672434,15.4425523);
     private GoogleApiClient googleApiClient;
     private LocationRequest locationRequest;
@@ -110,7 +109,6 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
                 }
             });
             createLocationsRequest();
-            //queryDirectionsApi(true);
         }
     }
 
@@ -135,13 +133,6 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
     }
 
     private void showBeislDetails(Marker marker) {
-        /*findViewById(R.id.beisl_detail).setVisibility(View.VISIBLE);
-        if(place != null) {
-            ((TextView) findViewById(R.id.title_text)).setText(place.getName());
-            ((TextView) findViewById(R.id.address_text)).setText(place.getAddress());
-        } else {
-            Log.d(LOG_TAG, "Place == null " + marker.hashCode());
-        } */
         if(markerToPlaceMap.containsKey(marker.getPosition())) {
             Place place = markerToPlaceMap.get(marker.getPosition());
             Intent intent = new Intent(this, PlacesPreviewActivity.class);
@@ -173,7 +164,7 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
         try {
             DirectionsApiJSONParser parser = new DirectionsApiJSONParser(result);
             String encodedString = parser.getPoints();
-            List<LatLng> polygoneLines = PolyUtil.decode(encodedString);//decodePoly(encodedString);
+            List<LatLng> polygoneLines = PolyUtil.decode(encodedString);
 
             JSONArray wp = parser.getWaypointOrder();
             Log.d("MapsActivity", "Waypoints = " + wp.toString());
@@ -203,7 +194,6 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
     }
 
     private void setPlacesMarker() {
-        //for(Place place : places) {
         mapHandler.removeAllMarkers();
 
         if (currentLocation != null) {
@@ -251,12 +241,12 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
     @Override
     public <T> void onListViewReorder(List<T> content) {
         findViewById(R.id.load_map_overlay).setVisibility(View.VISIBLE);
-        places = (ArrayList<Place>) content;//((StableArrayAdapter)placesList.getAdapter()).getItems();
+        places = (ArrayList<Place>) content;
         queryDirectionsApi(false);
     }
 
     private void updatePlacesArray(int[] waypointsIndex) {
-        List<Place> waypoints = places;//.subList(0, places.size()-1);
+        List<Place> waypoints = places;
         List<Place> waypointsSorted = new ArrayList<Place>();
         if(waypointsIndex.length != waypoints.size()){
             Log.e(LOG_TAG, "Update Places: wrong indices " + waypointsIndex.length + " | " + waypoints.size());
@@ -265,9 +255,7 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
                 waypointsSorted.add(waypoints.get(waypointsIndex[i]));
             }
             ArrayList<Place> sortedPlaces = new ArrayList<>();
-            //sortedPlaces.add(places.get(0));
             sortedPlaces.addAll(waypointsSorted);
-            //sortedPlaces.add(places.get(places.size()-1));
             places = sortedPlaces;
         }
 
@@ -275,19 +263,14 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_maps, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

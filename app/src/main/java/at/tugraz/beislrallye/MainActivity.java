@@ -32,7 +32,6 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -48,7 +47,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -60,8 +58,6 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     private AutoCompleteTextView startPoint;
     private GoogleApiClient mGoogleApiClient;
     private LatLng currentPos = null;
-
-    private int numPlaces;
 
 
     private List<String> types;
