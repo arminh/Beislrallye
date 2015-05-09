@@ -73,6 +73,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
 
         startPoint = (AutoCompleteTextView) findViewById(R.id.start_point);
         startPoint.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.list_item));

@@ -24,6 +24,7 @@ public class ConsumptionActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consumption);
+        getSupportActionBar().hide();
         Intent i = getIntent();
         place = i.getExtras().getString("PLACE_NAME");
         consumptionList = (ListView) findViewById(R.id.consumption_lv);

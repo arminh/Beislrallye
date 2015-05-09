@@ -25,6 +25,7 @@ public class PlacesPreviewActivity extends ActionBarActivity implements OnDownlo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_preview);
+        getSupportActionBar().hide();
 
         Bundle extras = getIntent().getExtras();
         Place place = (Place) getIntent().getSerializableExtra("place");
