@@ -123,5 +123,5 @@
         android:layout_marginTop="10dp"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimaryComplementary"
-        android:text="Ralley Berechnen"/>
+        android:text="@string/calc_rallye"/>
 </RelativeLayout>

@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">BeislRallye</string>
+
+    <string name="description_location_type">What kind of locations do you want to visit? </string>
+    <string name="description_location_count">How many locations shall we find for you? </string>
+    <string name="description_start_point">Where is the starting point of your rallye? </string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_places_preview">PlacesPreviewActivity</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_consumption">ConsumptionActivity</string>
+    <string name="title_activity_summary"></string>
+
+
+    <string name="location_not_active">Location Services Not Active</string>
+    <string name="enable_location">Please enable Location Services and GPS</string>
+
+    <string name="error_amount">Please enter the desired number of locations</string>
+    <string name="error_type">Please choose at least one location type</string>
+
+    <string name="address">Address</string>
+
+    <string name="calc_rallye">Calculate Rallye</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="summary">Summary</string>
+    <string name="consumtion">Consumption</string>
+    <string name="start">Start: </string>
+    <string name="end">End: </string>
+    <string name="duration">Duration: </string>
+</resources>
