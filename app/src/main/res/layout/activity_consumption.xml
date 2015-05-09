@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="@android:color/white"
             android:onClick="fabClicked"
-            fab:fab_title="Bier"
+            fab:fab_title="@string/beer"
             fab:fab_size="mini"
             fab:fab_icon="@drawable/drink_beer"
             fab:fab_colorPressed="@color/colorWhitePressed"/>
@@ -46,7 +46,7 @@
             android:onClick="fabClicked"
             fab:fab_colorNormal="@android:color/white"
             fab:fab_size="mini"
-            fab:fab_title="Wein"
+            fab:fab_title="@string/wine"
             fab:fab_labelsPosition="left"
             fab:fab_icon="@drawable/drink_wine"
             fab:fab_colorPressed="@color/colorWhitePressed"/>
@@ -58,7 +58,7 @@
             fab:fab_colorNormal="@android:color/white"
             fab:fab_size="mini"
             fab:fab_icon="@drawable/drink_shot"
-            fab:fab_title="Shot"
+            fab:fab_title="@string/shot"
             fab:fab_colorPressed="@color/colorWhitePressed"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -67,7 +67,7 @@
             android:onClick="fabClicked"
             fab:fab_colorNormal="@android:color/white"
             fab:fab_size="mini"
-            fab:fab_title="Cocktail"
+            fab:fab_title="@string/cocktail"
             fab:fab_icon="@drawable/drink_cocktail"
             fab:fab_colorPressed="@color/colorWhitePressed"/>
 
@@ -77,7 +77,7 @@
             android:onClick="fabClicked"
             fab:fab_colorNormal="@android:color/white"
             fab:fab_size="mini"
-            fab:fab_title="Anderes"
+            fab:fab_title="@string/other"
             fab:fab_icon="@drawable/drink_other"
             fab:fab_colorPressed="@color/colorWhitePressed"/>
 
