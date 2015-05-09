@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.util.SparseBooleanArray;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -194,7 +195,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                         selectedTypes.add(types.get(checked.indexOfKey(i)).toLowerCase());
                     }
                 }
-
+                ((Button)findViewById(R.id.compute_ralley_button)).setEnabled(false);
                 prepareRallye();
             }
         }
@@ -212,7 +213,6 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             getNearestPlaces(startPointAddress);
         }
     }
-
 
     private class LocationControl extends AsyncTask<Context, Void, Void> {
 
@@ -274,6 +274,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
         } catch (JSONException e) {
             Log.e("MapsActivity", "Error in onTaskCompleted" + e.toString());
+            ((Button)findViewById(R.id.compute_ralley_button)).setEnabled(true);
         }
 
 
