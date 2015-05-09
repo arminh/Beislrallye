@@ -1,5 +1,6 @@
 package at.tugraz.beislrallye;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,15 +21,24 @@ public class SummaryActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
+        getSupportActionBar().hide();
         LinearLayout layout = (LinearLayout) findViewById(R.id.summary_layout);
         TextView start = (TextView) findViewById(R.id.start_tv);
         TextView end = (TextView) findViewById(R.id.end_tv);
         TextView duration = (TextView) findViewById(R.id.duration_tv);
 
-        start.setText(getResources().getString(R.string.start) + " " + new SimpleDateFormat("HH:mm yyyy-MM-dd").format(RalleyStatisticsManager.getInstance().getStartTime()));
-        end.setText(getResources().getString(R.string.end) + " " + new SimpleDateFormat("HH:mm yyyy-MM-dd").format(RalleyStatisticsManager.getInstance().getEndTime()));
-        long dur = RalleyStatisticsManager.getInstance().getEndTime().getTime() - RalleyStatisticsManager.getInstance().getStartTime().getTime();
-        duration.setText(getResources().getString(R.string.duration) + " " + new SimpleDateFormat("HH:mm:ss").format(new Date(dur)));
+        start.setText(getResources().getString(R.string.start) + " " + new SimpleDateFormat("HH:mm dd:MM:yyyy").format(RalleyStatisticsManager.getInstance().getStartTime()));
+        end.setText(getResources().getString(R.string.end) + " " + new SimpleDateFormat("HH:mm dd:MM:yyyy").format(RalleyStatisticsManager.getInstance().getEndTime()));
+        long diff = RalleyStatisticsManager.getInstance().getEndTime().getTime() - RalleyStatisticsManager.getInstance().getStartTime().getTime();
+
+        long diffSeconds = diff / 1000 % 60;
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000);
+        String secStr = diffSeconds < 10 ? "0" + diffSeconds : "" + diffSeconds;
+        String minStr = diffMinutes < 10 ? "0" + diffMinutes : "" + diffMinutes;
+        String hrStr = diffHours < 10 ? "0" + diffHours : "" + diffHours;
+
+        duration.setText(getResources().getString(R.string.duration) + " " + hrStr + ":" + minStr + ":" + secStr);
 
         HashMap<String, Integer> consumptions = ConsumptionManager.getInstance().getAllConsumptions();
         Iterator it = consumptions.entrySet().iterator();
@@ -42,6 +52,12 @@ public class SummaryActivity extends ActionBarActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

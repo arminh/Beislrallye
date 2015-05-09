@@ -10,6 +10,16 @@
     <string name="title_activity_consumption">ConsumptionActivity</string>
     <string name="title_activity_summary"></string>
 
+    <string name="location_not_active">Location Services nicht aktiviert</string>
+    <string name="enable_location">Bitte aktivieren Sie die Location Services und GPS</string>
+
+    <string name="error_amount">Bitte die gewünschte Anzahl an Beisln angeben</string>
+    <string name="error_type">Bitte mindestens einen Beisl-Typ auswählen</string>
+
+    <string name="address">Adresse</string>
+
+    <string name="calc_rallye">Ralley Berechnen</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="summary">Zusammenfassung</string>
     <string name="consumtion">Konsum</string>

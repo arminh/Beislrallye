@@ -53,6 +53,7 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        getSupportActionBar().hide();
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -141,11 +142,12 @@ public class MapsActivity extends ActionBarActivity implements OnWebConnectionTa
         } else {
             Log.d(LOG_TAG, "Place == null " + marker.hashCode());
         } */
-        Place place = markerToPlaceMap.get(marker.getPosition());
-        Intent intent = new Intent(this,PlacesPreviewActivity.class);
-        intent.putExtra("place", place);
-
-        startActivity(intent);
+        if(markerToPlaceMap.containsKey(marker.getPosition())) {
+            Place place = markerToPlaceMap.get(marker.getPosition());
+            Intent intent = new Intent(this, PlacesPreviewActivity.class);
+            intent.putExtra("place", place);
+            startActivity(intent);
+        }
     }
 
     private void queryDirectionsApi(boolean optimize) {

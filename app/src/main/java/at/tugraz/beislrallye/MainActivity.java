@@ -73,6 +73,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
 
         startPoint = (AutoCompleteTextView) findViewById(R.id.start_point);
         startPoint.setAdapter(new GooglePlacesAutocompleteAdapter(this, R.layout.list_item));
@@ -86,7 +87,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         types.add("Bar");
         types.add("Cafe");
         types.add("Nightclub");
-        types.add("Restraurant");
+        types.add("Restaurant");
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -161,8 +162,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 !lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Location Services Not Active");
-            builder.setMessage("Please enable Location Services and GPS");
+            builder.setTitle(getResources().getString(R.string.location_not_active));
+            builder.setMessage(getResources().getString(R.string.enable_location));
             builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -177,14 +178,14 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     private void handleOnComputeClick() {
         if (locationCount.getText().toString().matches("")) {
-            Toast.makeText(this, "Bitte die gewünschte Anzahl an Beisln angeben", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.error_amount), Toast.LENGTH_SHORT).show();
         } else {
             numOfLocations = Integer.parseInt(locationCount.getText().toString());
             selectedTypes = new ArrayList<>();
 
             SparseBooleanArray checked = locationTypeLV.getCheckedItemPositions();
             if(checked.size() <= 0) {
-                Toast.makeText(this, "Bitte mindestens einen Beisl-Typ auswählen", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getResources().getString(R.string.error_type), Toast.LENGTH_SHORT).show();
             } else {
                 for (int i = 0; i < checked.size(); i++) {
                     int key = checked.keyAt(i);
